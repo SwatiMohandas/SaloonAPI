@@ -1,0 +1,46 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "https://localhost:44394/api",
+});
+
+// Add a request interceptor to attach the token
+api.interceptors.request.use(
+  (config) => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export const shopApi = {
+  createShop: (data: FormData) => api.post("/shops", data),
+  getShop: (id: number) => api.get(`/shops/${id}`),
+  updateShop: (id: number, data: FormData) => api.put(`/shops/${id}`, data),
+  deleteShop: (id: number) => api.delete(`/shops/${id}`),
+  addServices: (shopId: number, data: any) =>
+    api.post(`/shops/${shopId}/services`, data),
+  getReviews: (shopId: number) => api.get(`/reviews/shop/${shopId}`),
+  addReview: (data: { shopId: number; rating: number; comment: string }) =>
+    api.post("/reviews", data),
+  getQueue: (shopId: number) => api.get(`/queue/${shopId}`),
+  getMyServiceHistory: () => api.get("/queue/history"),
+  getUserInfo: () => api.get("/auth/me"),
+  joinQueue: (data: any) => api.post("/queue/join", data),
+  updateQueueStatus: (id: number, status: string) =>
+    api.put(`/queue/${id}/status`, { status }),
+  cancelBooking: (id: number) => api.put(`/queue/${id}/cancel`),
+  delayBooking: (id: number) => api.put(`/queue/${id}/delay`),
+  verifyOtp: (data: { email: string; mobileNumber: string; otp: string }) =>
+    api.post("/auth/verify-otp", data),
+  getSlots: (shopId: number, date: string) =>
+    api.get(`/queue/slots?shopId=${shopId}&date=${date}`),
+};
+
+export default api;
