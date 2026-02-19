@@ -41,6 +41,9 @@ export const shopApi = {
     api.post("/auth/verify-otp", data),
   getSlots: (shopId: number, date: string) =>
     api.get(`/queue/slots?shopId=${shopId}&date=${date}`),
+  //const res = await shopApi.getSlots(shopId, date);
+//setSlots(Array.isArray(res.data?.slots) ? res.data.slots : []);
+
 };
 
 export default api;
