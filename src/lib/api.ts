@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://localhost:44394/api",
+  baseURL: "http://localhost:5148/api",
 });
 
 // Add a request interceptor to attach the token
@@ -41,6 +41,41 @@ export const shopApi = {
     api.post("/auth/verify-otp", data),
   getSlots: (shopId: number, date: string) =>
     api.get(`/queue/slots?shopId=${shopId}&date=${date}`),
+};
+
+export const specializationApi = {
+  getAll: () => api.get("/specialization"),
+  getById: (id: number) => api.get(`/specialization/${id}`),
+  create: (data: { specializationName: string; description: string }) =>
+    api.post("/specialization", data),
+  update: (
+    id: number,
+    data: { specializationName: string; description: string }
+  ) => api.put(`/specialization/${id}`, data),
+  delete: (id: number) => api.delete(`/specialization/${id}`),
+};
+
+export const staffApi = {
+  getAll: () => api.get("/staff"),
+  getById: (id: string) => api.get(`/staff/${id}`),
+  create: (data: {
+    staffName: string;
+    address: string;
+    phoneNumber: string;
+    aadharNumber: string;
+    specializationIds: number[];
+  }) => api.post("/staff", data),
+  update: (
+    id: string,
+    data: {
+      staffName: string;
+      address: string;
+      phoneNumber: string;
+      aadharNumber: string;
+      specializationIds: number[];
+    }
+  ) => api.put(`/staff/${id}`, data),
+  delete: (id: string) => api.delete(`/staff/${id}`),
 };
 
 export default api;
